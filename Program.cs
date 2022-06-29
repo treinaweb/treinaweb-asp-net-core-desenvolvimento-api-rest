@@ -3,6 +3,7 @@ using TWJobs.Core.Config;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegisterDatabase();
+builder.Services.RegisterRepositories();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
