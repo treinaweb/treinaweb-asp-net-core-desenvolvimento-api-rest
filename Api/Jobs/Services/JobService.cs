@@ -32,4 +32,14 @@ public class JobService : IJobService
         }
         return job;
     }
+
+    public Job UpdateById(int id, Job job)
+    {
+        if (!_jobRepository.ExistsById(id))
+        {
+            throw new ModelNotFoundException($"Job with id {id} not found");
+        }
+        job.Id = id;
+        return _jobRepository.Update(job);
+    }
 }

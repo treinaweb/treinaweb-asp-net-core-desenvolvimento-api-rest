@@ -34,4 +34,10 @@ public class JobController : ControllerBase
         var body = _jobService.Create(job);
         return CreatedAtAction(nameof(FindById), new { Id = job.Id }, body);
     }
+
+    [HttpPut("{id}")]
+    public IActionResult UpdateById([FromRoute] int id, [FromBody] Job job)
+    {
+        return Ok(_jobService.UpdateById(id, job));
+    }
 }
