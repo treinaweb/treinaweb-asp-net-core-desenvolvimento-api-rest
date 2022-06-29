@@ -13,6 +13,11 @@ public class JobService : IJobService
         _jobRepository = jobRepository;
     }
 
+    public Job Create(Job job)
+    {
+        return _jobRepository.Create(job);
+    }
+
     public ICollection<Job> FindAll()
     {
         return _jobRepository.FindAll();
