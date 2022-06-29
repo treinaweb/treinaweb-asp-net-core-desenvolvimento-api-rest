@@ -18,6 +18,15 @@ public class JobService : IJobService
         return _jobRepository.Create(job);
     }
 
+    public void DeleteById(int id)
+    {
+        if (!_jobRepository.ExistsById(id))
+        {
+            throw new ModelNotFoundException($"Job with id {id} not found");
+        }
+        _jobRepository.DeleteById(id);
+    }
+
     public ICollection<Job> FindAll()
     {
         return _jobRepository.FindAll();

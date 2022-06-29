@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using TWJobs.Api.Jobs.Services;
-using TWJobs.Core.Exceptions;
 using TWJobs.Core.Models;
 
 namespace TWJobs.Api.Jobs.Controllers;
@@ -39,5 +38,12 @@ public class JobController : ControllerBase
     public IActionResult UpdateById([FromRoute] int id, [FromBody] Job job)
     {
         return Ok(_jobService.UpdateById(id, job));
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteById([FromRoute] int id)
+    {
+        _jobService.DeleteById(id);
+        return NoContent();
     }
 }
