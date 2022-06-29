@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TWJobs.Api.Jobs.Services;
+using TWJobs.Core.Exceptions;
 
 namespace TWJobs.Api.Jobs.Controllers;
 
@@ -18,5 +19,11 @@ public class JobController : ControllerBase
     public IActionResult FindAll()
     {
         return Ok(_jobService.FindAll());
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult FindById([FromRoute] int id)
+    {
+        return Ok(_jobService.FindById(id));
     }
 }

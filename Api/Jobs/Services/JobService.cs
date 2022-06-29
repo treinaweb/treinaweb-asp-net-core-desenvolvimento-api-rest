@@ -1,3 +1,4 @@
+using TWJobs.Core.Exceptions;
 using TWJobs.Core.Models;
 using TWJobs.Core.Repositories.Jobs;
 
@@ -15,5 +16,15 @@ public class JobService : IJobService
     public ICollection<Job> FindAll()
     {
         return _jobRepository.FindAll();
+    }
+
+    public Job FindById(int id)
+    {
+        var job = _jobRepository.FindById(id);
+        if (job is null)
+        {
+            throw new ModelNotFoundException($"Job with id {id} not found");
+        }
+        return job;
     }
 }
