@@ -1,4 +1,4 @@
-namespace TWJobs.Api.Common;
+namespace TWJobs.Api.Common.Dtos;
 
 public class ErrorResponse
 {
