@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.RegisterDatabase();
 builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
+builder.Services.RegisterMappers();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

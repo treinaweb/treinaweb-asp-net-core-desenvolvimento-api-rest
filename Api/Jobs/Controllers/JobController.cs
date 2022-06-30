@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using TWJobs.Api.Jobs.Dtos;
 using TWJobs.Api.Jobs.Services;
-using TWJobs.Core.Models;
 
 namespace TWJobs.Api.Jobs.Controllers;
 
@@ -28,16 +28,16 @@ public class JobController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Job job)
+    public IActionResult Create([FromBody] JobRequest jobRequest)
     {
-        var body = _jobService.Create(job);
-        return CreatedAtAction(nameof(FindById), new { Id = job.Id }, body);
+        var body = _jobService.Create(jobRequest);
+        return CreatedAtAction(nameof(FindById), new { Id = body.Id }, body);
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateById([FromRoute] int id, [FromBody] Job job)
+    public IActionResult UpdateById([FromRoute] int id, [FromBody] JobRequest jobRequest)
     {
-        return Ok(_jobService.UpdateById(id, job));
+        return Ok(_jobService.UpdateById(id, jobRequest));
     }
 
     [HttpDelete("{id}")]

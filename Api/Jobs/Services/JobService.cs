@@ -1,3 +1,5 @@
+using TWJobs.Api.Jobs.Dtos;
+using TWJobs.Api.Jobs.Mappers;
 using TWJobs.Core.Exceptions;
 using TWJobs.Core.Models;
 using TWJobs.Core.Repositories.Jobs;
@@ -7,15 +9,19 @@ namespace TWJobs.Api.Jobs.Services;
 public class JobService : IJobService
 {
     private readonly IJobRepository _jobRepository;
+    private readonly IJobMapper _jobMapper;
 
-    public JobService(IJobRepository jobRepository)
+    public JobService(IJobRepository jobRepository, IJobMapper jobMapper)
     {
         _jobRepository = jobRepository;
+        _jobMapper = jobMapper;
     }
 
-    public Job Create(Job job)
+    public JobDetailResponse Create(JobRequest jobRequest)
     {
-        return _jobRepository.Create(job);
+        var jobToCreate = _jobMapper.ToModel(jobRequest);
+        var createdJob = _jobRepository.Create(jobToCreate);
+        return _jobMapper.ToDetailResponse(createdJob);
     }
 
     public void DeleteById(int id)
@@ -27,28 +33,32 @@ public class JobService : IJobService
         _jobRepository.DeleteById(id);
     }
 
-    public ICollection<Job> FindAll()
+    public ICollection<JobSummaryResponse> FindAll()
     {
-        return _jobRepository.FindAll();
+        return _jobRepository.FindAll()
+            .Select(job => _jobMapper.ToSummaryResponse(job))
+            .ToList();
     }
 
-    public Job FindById(int id)
+    public JobDetailResponse FindById(int id)
     {
         var job = _jobRepository.FindById(id);
         if (job is null)
         {
             throw new ModelNotFoundException($"Job with id {id} not found");
         }
-        return job;
+        return _jobMapper.ToDetailResponse(job);
     }
 
-    public Job UpdateById(int id, Job job)
+    public JobDetailResponse UpdateById(int id, JobRequest jobRequest)
     {
         if (!_jobRepository.ExistsById(id))
         {
             throw new ModelNotFoundException($"Job with id {id} not found");
         }
-        job.Id = id;
-        return _jobRepository.Update(job);
+        var jobToUpdate = _jobMapper.ToModel(jobRequest);
+        jobToUpdate.Id = id;
+        var updatedJob = _jobRepository.Update(jobToUpdate);
+        return _jobMapper.ToDetailResponse(updatedJob);
     }
 }
