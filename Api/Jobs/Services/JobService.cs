@@ -1,3 +1,4 @@
+using FluentValidation;
 using TWJobs.Api.Jobs.Dtos;
 using TWJobs.Api.Jobs.Mappers;
 using TWJobs.Core.Exceptions;
@@ -10,15 +11,21 @@ public class JobService : IJobService
 {
     private readonly IJobRepository _jobRepository;
     private readonly IJobMapper _jobMapper;
+    private readonly IValidator<JobRequest> _jobRequestValidator;
 
-    public JobService(IJobRepository jobRepository, IJobMapper jobMapper)
+    public JobService(
+        IJobRepository jobRepository,
+        IJobMapper jobMapper,
+        IValidator<JobRequest> jobRequestValidator)
     {
         _jobRepository = jobRepository;
         _jobMapper = jobMapper;
+        _jobRequestValidator = jobRequestValidator;
     }
 
     public JobDetailResponse Create(JobRequest jobRequest)
     {
+        _jobRequestValidator.ValidateAndThrow(jobRequest);
         var jobToCreate = _jobMapper.ToModel(jobRequest);
         var createdJob = _jobRepository.Create(jobToCreate);
         return _jobMapper.ToDetailResponse(createdJob);
@@ -52,6 +59,7 @@ public class JobService : IJobService
 
     public JobDetailResponse UpdateById(int id, JobRequest jobRequest)
     {
+        _jobRequestValidator.ValidateAndThrow(jobRequest);
         if (!_jobRepository.ExistsById(id))
         {
             throw new ModelNotFoundException($"Job with id {id} not found");
