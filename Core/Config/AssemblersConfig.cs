@@ -10,5 +10,6 @@ public static class AssemblersConfig
     {
         services.AddScoped<IAssembler<JobSummaryResponse>, JobSummaryAssembler>();
         services.AddScoped<IAssembler<JobDetailResponse>, JobDetailAssembler>();
+        services.AddScoped<IPagedAssembler<JobSummaryResponse>, JobSummaryPagedAssembler>();
     }
 }

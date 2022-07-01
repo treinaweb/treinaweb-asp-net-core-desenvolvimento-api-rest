@@ -10,24 +10,24 @@ namespace TWJobs.Api.Jobs.Controllers;
 public class JobController : ControllerBase
 {
     private readonly IJobService _jobService;
-    private readonly IAssembler<JobSummaryResponse> _jobSummaryAssembler;
     private readonly IAssembler<JobDetailResponse> _jobDetailAssembler;
+    private readonly IPagedAssembler<JobSummaryResponse> _jobSummaryPagedAssembler;
 
     public JobController(
         IJobService jobService,
-        IAssembler<JobSummaryResponse> jobSummaryAssembler,
-        IAssembler<JobDetailResponse> jobDetailAssembler)
+        IAssembler<JobDetailResponse> jobDetailAssembler,
+        IPagedAssembler<JobSummaryResponse> jobSummaryPagedAssembler)
     {
         _jobService = jobService;
-        _jobSummaryAssembler = jobSummaryAssembler;
         _jobDetailAssembler = jobDetailAssembler;
+        _jobSummaryPagedAssembler = jobSummaryPagedAssembler;
     }
 
     [HttpGet(Name = "FindAllJobs")]
     public IActionResult FindAll([FromQuery] int page, [FromQuery] int size)
     {
         var body = _jobService.FindAll(page, size);
-        return Ok(body);
+        return Ok(_jobSummaryPagedAssembler.ToPagedResource(body, HttpContext));
     }
 
     [HttpGet("{id}", Name = "FindJobById")]
