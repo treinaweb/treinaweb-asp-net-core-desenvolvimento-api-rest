@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TWJobs.Api.Common.Assemblers;
+using TWJobs.Api.Common.Dtos;
 using TWJobs.Api.Jobs.Dtos;
 using TWJobs.Api.Jobs.Services;
 
@@ -24,6 +25,7 @@ public class JobController : ControllerBase
     }
 
     [HttpGet(Name = "FindAllJobs")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<JobSummaryResponse>))]
     public IActionResult FindAll([FromQuery] int page, [FromQuery] int size)
     {
         var body = _jobService.FindAll(page, size);
@@ -31,6 +33,8 @@ public class JobController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "FindJobById")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JobDetailResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
     public IActionResult FindById([FromRoute] int id)
     {
         var body = _jobService.FindById(id);
@@ -38,6 +42,8 @@ public class JobController : ControllerBase
     }
 
     [HttpPost(Name = "CreateJob")]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(JobDetailResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResponse))]
     public IActionResult Create([FromBody] JobRequest jobRequest)
     {
         var body = _jobService.Create(jobRequest);
@@ -49,6 +55,9 @@ public class JobController : ControllerBase
     }
 
     [HttpPut("{id}", Name = "UpdateJobById")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JobDetailResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
     public IActionResult UpdateById([FromRoute] int id, [FromBody] JobRequest jobRequest)
     {
         var body = _jobService.UpdateById(id, jobRequest);
@@ -56,6 +65,8 @@ public class JobController : ControllerBase
     }
 
     [HttpDelete("{id}", Name = "DeleteJobById")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
     public IActionResult DeleteById([FromRoute] int id)
     {
         _jobService.DeleteById(id);
