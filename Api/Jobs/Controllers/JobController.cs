@@ -24,10 +24,10 @@ public class JobController : ControllerBase
     }
 
     [HttpGet(Name = "FindAllJobs")]
-    public IActionResult FindAll()
+    public IActionResult FindAll([FromQuery] int page, [FromQuery] int size)
     {
-        var body = _jobService.FindAll();
-        return Ok(_jobSummaryAssembler.ToResourceCollection(body, HttpContext));
+        var body = _jobService.FindAll(page, size);
+        return Ok(body);
     }
 
     [HttpGet("{id}", Name = "FindJobById")]

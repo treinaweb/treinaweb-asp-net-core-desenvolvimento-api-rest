@@ -1,8 +1,10 @@
 using FluentValidation;
+using TWJobs.Api.Common.Dtos;
 using TWJobs.Api.Jobs.Dtos;
 using TWJobs.Api.Jobs.Mappers;
 using TWJobs.Core.Exceptions;
 using TWJobs.Core.Models;
+using TWJobs.Core.Repositories;
 using TWJobs.Core.Repositories.Jobs;
 
 namespace TWJobs.Api.Jobs.Services;
@@ -45,6 +47,13 @@ public class JobService : IJobService
         return _jobRepository.FindAll()
             .Select(job => _jobMapper.ToSummaryResponse(job))
             .ToList();
+    }
+
+    public PagedResponse<JobSummaryResponse> FindAll(int page, int size)
+    {
+        var paginationOption = new PaginationOptions(page, size);
+        var pagedResult = _jobRepository.FindAll(paginationOption);
+        return _jobMapper.ToPagedSummaryResponse(pagedResult);
     }
 
     public JobDetailResponse FindById(int id)
