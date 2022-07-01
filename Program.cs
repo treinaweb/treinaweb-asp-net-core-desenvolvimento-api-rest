@@ -7,6 +7,7 @@ builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
 builder.Services.RegisterMappers();
 builder.Services.RegisterValidators();
+builder.Services.RegisterAssemblers();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
